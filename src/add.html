@@ -4,7 +4,10 @@
 <head>
     <meta charset="UTF-8">
     <!-- https://developer.mozilla.org/en-US/docs/Web/HTTP/CSP -->
-    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; script-src 'self'">
+    <meta http-equiv="Content-Security-Policy" content="default-src 'self'; 
+      script-src 'self'; 
+      font-src 'self' https://fonts.gstatic.com;
+      style-src 'self' https://fonts.googleapis.com">
     <link rel="stylesheet" href="../assets/css/main.css">
     <link rel="stylesheet" href="../assets/css/add.css">
     <title>Document</title>
@@ -21,7 +24,9 @@
         <button id="updateBtn">Update</button>
     </div>
 
-    <a id="closeBtn">Close Window</a><br>
+    <a id="closeBtn">Close Window</a>
 
     <script src="./add.js"></script>
 </body>
+
+</html>

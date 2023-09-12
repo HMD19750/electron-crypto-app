@@ -1,5 +1,5 @@
 // Modules to control application life and create native browser window
-const { app, BrowserWindow, Menu, shell } = require('electron')
+const { app, BrowserWindow, Menu, shell, ipcMain } = require('electron')
 const path = require('node:path')
 
 const isMac = process.platform === "darwin";
@@ -13,7 +13,7 @@ const createWindow = () => {
         height: 600,
         webPreferences: {
             nodeIntegration: true,
-            contextIsolation: false,
+            contextIsolation: true,
             preload: path.join(__dirname, 'preload.js')
         }
     })
@@ -71,3 +71,36 @@ app.on('window-all-closed', () => {
         app.quit();
     };
 });
+
+//Afvangen button clicked to open small window
+ipcMain.on("notifyBtnClicked", openNotifyWindow);
+
+
+
+//Openen notify window
+function openNotifyWindow() {
+    const modalPath = path.join(__dirname, "./src/add.html");
+
+    const win = new BrowserWindow({
+        width: 900,
+        height: 200,
+        frame: false,
+        transparent: true,
+        alwaysOnTop: true,
+        webPreferences: {
+            nodeIntegration: true,
+            contextIsolation: true,
+            preload: path.join(__dirname, 'preload.js')
+        }
+    });
+
+    win.webContents.openDevTools();
+    win.loadFile(modalPath);
+    win.show();
+
+    //Handling close button
+    ipcMain.on("closeNotifyWindowBtnClicked", () => {
+        win.close()
+    });
+
+}
