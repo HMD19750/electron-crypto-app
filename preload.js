@@ -1,4 +1,5 @@
 const { ipcRenderer, contextBridge } = require('electron');
+const axios = require("axios");
 
 
 // All the Node.js APIs are available in the preload process.
@@ -19,3 +20,9 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
     on: (channel, func) =>
         ipcRenderer.on(channel, (event, ...args) => func(...args)),
 });
+
+//Poging axios toegankelijk te maken in renderer
+contextBridge.exposeInMainWorld('axios', {
+    get: async(url) => axios.get(url)
+
+})
