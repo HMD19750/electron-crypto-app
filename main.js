@@ -4,11 +4,11 @@ const path = require('node:path')
 
 const isMac = process.platform === "darwin";
 const isDev = process.env.NODE_ENV !== "production";
-
+var mainWindow;
 
 const createWindow = () => {
     // Create the browser window.
-    const mainWindow = new BrowserWindow({
+    mainWindow = new BrowserWindow({
         width: isDev ? 1300 : 800,
         height: 600,
         webPreferences: {
@@ -25,6 +25,8 @@ const createWindow = () => {
     if (isDev) {
         mainWindow.webContents.openDevTools();
     }
+
+
 }
 
 
@@ -44,6 +46,8 @@ app.whenReady().then(() => {
             createWindow()
         };
     })
+
+
 })
 
 //Menus
@@ -75,6 +79,10 @@ app.on('window-all-closed', () => {
 //Afvangen button clicked to open small window
 ipcMain.on("notifyBtnClicked", openNotifyWindow);
 
+ipcMain.on("update-notify-value", function(event, arg) {
+    mainWindow.webContents.send("targetPriceVal", arg);
+})
+
 
 
 //Openen notify window
@@ -82,7 +90,7 @@ function openNotifyWindow() {
     const modalPath = path.join(__dirname, "./src/add.html");
 
     const win = new BrowserWindow({
-        width: 900,
+        width: 400,
         height: 200,
         frame: false,
         transparent: true,
@@ -94,7 +102,7 @@ function openNotifyWindow() {
         }
     });
 
-    win.webContents.openDevTools();
+    //win.webContents.openDevTools();
     win.loadFile(modalPath);
     win.show();
 
