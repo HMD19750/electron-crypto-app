@@ -1,10 +1,12 @@
-const { ipcRenderer, contextBridge } = require('electron');
+const os = require('os');
+const path = require('path');
+const { app, ipcRenderer, contextBridge } = require('electron');
 const axios = require("axios");
 
 
 // All the Node.js APIs are available in the preload process.
 // It has the same sandbox as a Chrome extension.
-window.addEventListener('DOMContentLoaded', () => {
+/* window.addEventListener('DOMContentLoaded', () => {
     const replaceText = (selector, text) => {
         const element = document.getElementById(selector)
         if (element) element.innerText = text
@@ -13,7 +15,7 @@ window.addEventListener('DOMContentLoaded', () => {
     for (const dependency of['chrome', 'node', 'electron']) {
         replaceText(`${dependency}-version`, process.versions[dependency])
     }
-})
+}) */
 
 contextBridge.exposeInMainWorld('ipcRenderer', {
     send: (channel, data) => ipcRenderer.send(channel, data),
@@ -24,4 +26,12 @@ contextBridge.exposeInMainWorld('ipcRenderer', {
 contextBridge.exposeInMainWorld('axios', {
     get: async(url) => axios.get(url)
 
-})
+});
+
+contextBridge.exposeInMainWorld('path', {
+    join: (...args) => path.join(...args),
+});
+
+contextBridge.exposeInMainWorld('app', {
+    dirname: () => __dirname
+});

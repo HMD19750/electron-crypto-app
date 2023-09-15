@@ -3,6 +3,13 @@
 const notifyBtn = document.getElementById("notifyBtn");
 const price = document.querySelector("h1");
 const targetPrice = document.getElementById("targetprice");
+let targetPriceVal;
+
+const notification = {
+    title: "BTC alert",
+    body: "BTC just beat your target price!",
+    icon: path.join(app.dirname(), "assets/images/BTC.png")
+};
 
 
 function getBTC() {
@@ -11,6 +18,10 @@ function getBTC() {
         .then(res => {
             const cryptos = res.data.USD;
             price.innerHTML = "$" + cryptos.toLocaleString('nl');
+
+            if (targetPrice.innerHTML != '' && targetPriceVal < cryptos) {
+                const myNotification = new window.Notification(notification.title, notification);
+            }
         })
         .catch(err => {
             console.log(err);
@@ -27,6 +38,6 @@ notifyBtn.addEventListener("click", () => {
 });
 
 ipcRenderer.on("targetPriceVal", function(event, arg) {
-    const targetPriceVal = Number(arg);
+    targetPriceVal = Number(arg);
     targetPrice.innerHTML = "$" + targetPriceVal.toLocaleString("nl");
 })

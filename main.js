@@ -14,7 +14,8 @@ const createWindow = () => {
         webPreferences: {
             nodeIntegration: true,
             contextIsolation: true,
-            preload: path.join(__dirname, 'preload.js')
+            preload: path.join(__dirname, 'preload.js'),
+            sandbox: false
         }
     })
 
@@ -46,6 +47,8 @@ app.whenReady().then(() => {
             createWindow()
         };
     })
+
+
 
 
 })
